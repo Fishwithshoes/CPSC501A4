@@ -1,11 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <math.h>
 using namespace std;
 
 char* parseCompleteFile(char *currName);
-unsigned int extractIntAtIndex(char *currFile, int index);
-
+unsigned int extractIntAtIndex(char *currFile, unsigned int index);
+float* intToFloat (int* inArray, int size);
 
 int main(int argc, char *argv[]) {
     
@@ -15,30 +16,27 @@ int main(int argc, char *argv[]) {
     }
     
     char *inName = argv[1];
-    char *inputFileComplete;
-    unsigned int *x;
-    unsigned int N;
-    
-    /*char *IRName = argv[2];
-    char *IRFileComplete;
-    char *h;
-    long M;
-    
-    char *outName = argv [3];
-    char *outputFileComplete;
-    char *y;
-    long P;*/
+    char *inputFileComplete ;
+    int *inData;
+    float *x;
+    int N;
    
     inputFileComplete = parseCompleteFile(inName);
-    unsigned int chunckSize = extractIntAtIndex(inputFileComplete, 4);
-    cout << "chunkSize = 1069552 for DryDrums: " << chunckSize << endl;
-    unsigned int subChunk1Size = extractIntAtIndex(inputFileComplete, 16);
-    unsigned int subChunk1SizeCorrected = subChunk1Size - 16;
-    cout << "spare if this not 16: " << subChunk1Size << endl;
-    N = extractIntAtIndex(inputFileComplete, 40 + subChunk1SizeCorrected); //correct?
-    char * data = &inputFileComplete[44 + subChunk1SizeCorrected];
-    cout << "N = 1069514 for DryDrums: " << N << endl; //seems to be working for Sitar.wav
-    memcpy(&x, data, N);
+    unsigned int chunkSize;
+    unsigned int chunkSize = extractIntAtIndex(inputFileComplete, 4);
+    unsigned int inSubChunk1Size = extractIntAtIndex(inputFileComplete, 16);
+    unsigned int inSubChunk1SizeCorrected = inSubChunk1Size - 16;
+    memcpy(&N, inputFileComplete + (40 + inSubChunk1SizeCorrected), 4);
+    cout << "N: " << endl;
+    inData = new int[N];
+    memcpy(inData, inputFileComplete + (44 + inSubChunk1SizeCorrected), N);
+    x = new float[N];
+    x = intToFloat(inData, N);
+    for (int i = 0; i < N; i++) {
+        cout << x[i] << " ";
+    }
+
+    
     return 0;
 }
 
@@ -54,9 +52,9 @@ char* parseCompleteFile(char *currName) {
         file.read(memBlock,size);
         file.close();
         
-        /*for (int i = 0; i < size; i++) {
-            cout << (int) memBlock[i] << " ";
-        }*/
+        for (int i = 0; i < 50; i++) {
+            cout << memBlock[i] << " ";
+        }
     cout << endl;
     return memBlock;
     }
@@ -65,9 +63,23 @@ char* parseCompleteFile(char *currName) {
     }
 }
 
-unsigned int extractIntAtIndex(char *currFile, int index) {
+unsigned int extractIntAtIndex(char *currFile, unsigned int index) {
     unsigned int returnVal;
-    char * temp = &currFile[index];
-    memcpy(&returnVal, temp, sizeof(returnVal));
+    memcpy(&returnVal, currFile+index, sizeof(returnVal));
     return returnVal;
+}
+
+float * intToFloat (int* inArray, int size) {
+    int currMax;
+    for (int j = 0; j < size; j++) {
+        if (inArray[j] > currMax)
+            currMax = inArray[j];
+    }
+    
+    float *outArray = new float[size];
+    for (int i = 0; i < size; i++) {
+        float f = (float) inArray[i]/1073741824;
+        outArray[i] = f;
+    }
+    return outArray;
 }
