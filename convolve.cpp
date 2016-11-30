@@ -99,14 +99,11 @@ int main(int argc, char *argv[]) {
     convolve(x, N, h, M, y, P);
     y = normalFloat(y, P);
     
-    outData = new int16_t[M];
+    outData = new short[P];
     
     outData = floatToInt(y, P);
     //outData = floatToInt(h, M);
     //outData = floatToInt(x, N);
-    for (int i = 0; i < P; i++) {
-        cout << outData[i] << " ";
-    }
     
     FILE *outputFileStream = fopen(outName, "wb");
     if (outputFileStream == NULL) {
@@ -128,6 +125,7 @@ int main(int argc, char *argv[]) {
 void convolve(float x[], int N, float h[], int M, float y[], int P) {
     cout << "Convolving... " << endl;
     int n, m;
+    float largest = 0;
     for (int i = 0; i < P; i++) {
         y[i] = 0.0;
     }
@@ -136,6 +134,17 @@ void convolve(float x[], int N, float h[], int M, float y[], int P) {
             y[n+m] += x[n] * h[m];
         }
     }
+    /*for (n = 0; n < N; n++) {
+        for (m = 0; m < M; m++) {
+            float result = (x[n] * h[m]);
+            y[n+m] += result;
+            if(result > largest)
+                largest = result;
+        }
+    }
+    for (int p = 0; p < P; p++) {
+        y[p] = y[p]/largest;
+    }*/
 }
 
 char* parseCompleteFile(char *currName) {
@@ -176,19 +185,26 @@ float * intToFloat (int16_t* inArray, int size) {
     return outArray;
 }
 
+/*short* floatToInt (float* inArray, int size) {
+    short *outArray = new int16_t[size];
+    for (int i = 0; i < size; i++) {
+        int j = ceil(inArray[i]*INT16_MAX);
+        outArray[i] = j;
+    }
+    return outArray;
+}*/
+
 int16_t* floatToInt (float* inArray, int size) {
     int16_t *outArray = new int16_t[size];
     for (int i = 0; i < size; i++) {
-        int j = floor(inArray[i]*INT16_MAX);
+        int16_t j = ceil(inArray[i]*INT16_MAX);
         outArray[i] = j;
-        if (outArray[i] > INT16_MAX)
-            cout << outArray[i] << endl;
     }
     return outArray;
 }
 
 float * normalFloat (float* inArray, int size) {
-    int maxValue = 0;
+    float maxValue = 0.0;
     for (int j =0; j < size; j++){
         if (abs(inArray[j]) > maxValue)
             maxValue = inArray[j];
@@ -201,6 +217,21 @@ float * normalFloat (float* inArray, int size) {
     }
     return outArray;
 }
+
+/*int16_t * normalInt (int16_t* inArray, int size) {
+    int maxValue = 0;
+    for (int j =0; j < size; j++){
+        if (abs(inArray[j]) > maxValue)
+            maxValue = inArray[j];
+    }
+        
+    float *outArray = new float[size];
+    for (int i = 0; i < size; i++) {
+        float f = inArray[i]/maxValue; //currMax;
+        outArray[i] = f;
+    }
+    return outArray;
+}*/
 
 
 //This code courtesy of Leonard Manzara, CPSC 501, F16
