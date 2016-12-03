@@ -207,7 +207,7 @@ float * normalFloat (float* inArray, int size) {
     float maxValue = 0.0;
     for (int j =0; j < size; j++){
         if (abs(inArray[j]) > maxValue)
-            maxValue = inArray[j];
+            maxValue = abs(inArray[j]);
     }
         
     float *outArray = new float[size];
