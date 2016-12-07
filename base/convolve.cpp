@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctime>
 
-// int16_t
 using namespace std;
 
 char* parseCompleteFile(char *currName);
@@ -42,6 +42,7 @@ size_t fwriteShortLSB(short int data, FILE *stream);
 #define STEREOPHONIC      2
 
 int main(int argc, char *argv[]) {
+    time_t begin_time = time(0);
     
     if (argc != 4) {
         cout << "Please provide the correct arguements in the following order:\n"
@@ -102,8 +103,6 @@ int main(int argc, char *argv[]) {
     outData = new short[P];
     
     outData = floatToInt(y, P);
-    //outData = floatToInt(h, M);
-    //outData = floatToInt(x, N);
     
     FILE *outputFileStream = fopen(outName, "wb");
     if (outputFileStream == NULL) {
@@ -119,6 +118,8 @@ int main(int argc, char *argv[]) {
     
     fclose(outputFileStream);
     
+    time_t end_time = time(0);
+    cout << "total program time: " << end_time - begin_time << endl;
     return 0;
 }
 
@@ -134,17 +135,6 @@ void convolve(float x[], int N, float h[], int M, float y[], int P) {
             y[n+m] += x[n] * h[m];
         }
     }
-    /*for (n = 0; n < N; n++) {
-        for (m = 0; m < M; m++) {
-            float result = (x[n] * h[m]);
-            y[n+m] += result;
-            if(result > largest)
-                largest = result;
-        }
-    }
-    for (int p = 0; p < P; p++) {
-        y[p] = y[p]/largest;
-    }*/
 }
 
 char* parseCompleteFile(char *currName) {
@@ -158,10 +148,6 @@ char* parseCompleteFile(char *currName) {
         file.seekg(0, ios::beg);
         file.read(memBlock,size);
         file.close();
-        
-        /*for (int i = 0; i < 50; i++) {
-            cout << memBlock[i] << " ";
-        }*/
     cout << endl;
     return memBlock;
     }
@@ -184,15 +170,6 @@ float * intToFloat (int16_t* inArray, int size) {
     }
     return outArray;
 }
-
-/*short* floatToInt (float* inArray, int size) {
-    short *outArray = new int16_t[size];
-    for (int i = 0; i < size; i++) {
-        int j = ceil(inArray[i]*INT16_MAX);
-        outArray[i] = j;
-    }
-    return outArray;
-}*/
 
 int16_t* floatToInt (float* inArray, int size) {
     int16_t *outArray = new int16_t[size];
@@ -218,23 +195,12 @@ float * normalFloat (float* inArray, int size) {
     return outArray;
 }
 
-/*int16_t * normalInt (int16_t* inArray, int size) {
-    int maxValue = 0;
-    for (int j =0; j < size; j++){
-        if (abs(inArray[j]) > maxValue)
-            maxValue = inArray[j];
-    }
-        
-    float *outArray = new float[size];
-    for (int i = 0; i < size; i++) {
-        float f = inArray[i]/maxValue; //currMax;
-        outArray[i] = f;
-    }
-    return outArray;
-}*/
+//  All following functions:
+//  writeWaveFileHeader
+//  fwriteIntLSB
+//  fwriteShortLSB
+//  courtesy of Leonard Manzara, CPSC 501, F16
 
-
-//This code courtesy of Leonard Manzara, CPSC 501, F16
 void writeWaveFileHeader(int channels, int numberSamples, double outputRate, FILE *outputFile)
 {
     /*  Calculate the total number of bytes for the data chunk  */
@@ -300,25 +266,6 @@ size_t fwriteIntLSB(int data, FILE *stream)
     array[0] = (unsigned char)(data & 0xFF);
     return fwrite(array, sizeof(unsigned char), 4, stream);
 }
-
-
-
-/******************************************************************************
-*
-*       function:       fwriteShortLSB
-*
-*       purpose:        Writes a 2-byte integer to the file stream, starting
-*                       with the least significant byte (i.e. writes the int
-*                       in little-endian form).  This routine will work on both
-*                       big-endian and little-endian architectures.
-*
-*       internal
-*       functions:      none
-*
-*       library
-*       functions:      fwrite
-*
-******************************************************************************/
 
 size_t fwriteShortLSB(short int data, FILE *stream)
 {

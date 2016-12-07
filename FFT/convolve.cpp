@@ -6,8 +6,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-// int16_t
+#include <chrono>
+#include <ctime>
 using namespace std;
 
 char* parseCompleteFile(char *currName);
@@ -15,7 +15,7 @@ int extractIntAtIndex(char *currFile, int index);
 double* intToDouble(int16_t* inArray, int size);
 int16_t* complexDoubleToInt (double* inArray, int size);
 double * normalDouble (double* inArray, int size);
-void convolve(double x[], double h[], int L, double y[], int P);
+void convolve(double x[], double h[], int L, double y[]);
 void writeWaveFileHeader(int channels, int numberSamples, double outputRate, FILE *outputFile);
 size_t fwriteIntLSB(int data, FILE *stream);
 size_t fwriteShortLSB(short int data, FILE *stream);
@@ -25,16 +25,8 @@ void four1(double data[], int nn, int isign);
 void complexMulti(double X[], double H[], double Y[], int L);
 
 #define PI                3.14159265358979
-
-#define SIZE       8
 #define TWO_PI     (2.0 * PI)
-#define SWAP(a,b)  tempr=(a);(a)=(b);(b)=tempr
-
-/*  Test tone frequency in Hz  */
-#define FREQUENCY         440.0
-
-/*  Test tone duration in seconds  */
-#define DURATION          2.0				
+#define SWAP(a,b)  tempr=(a);(a)=(b);(b)=tempr			
 
 /*  Standard sample rate in Hz  */
 #define SAMPLE_RATE       44100.0
@@ -50,6 +42,8 @@ void complexMulti(double X[], double H[], double Y[], int L);
 #define STEREOPHONIC      2
 
 int main(int argc, char *argv[]) {
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    start = std::chrono::system_clock::now();
     
     if (argc != 4) {
         cout << "Please provide the correct arguements in the following order:\n"
@@ -124,7 +118,7 @@ int main(int argc, char *argv[]) {
         memcpy(h + i, raw_h + k, sizeof(double));
     }
     
-    convolve(x, h, L, y, P);
+    convolve(x, h, L, y);
     
     y = normalDouble(y,L);
     
@@ -136,17 +130,20 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "File %s cannot be opened for writing\n", outName);
     }
     
-    writeWaveFileHeader(1,L,44100.0, outputFileStream);
+    writeWaveFileHeader(1,L,SAMPLE_RATE, outputFileStream);
     for (int i = 0; i < L; i++) {
         fwriteShortLSB(outData[i], outputFileStream);
     }
     
     fclose(outputFileStream);
     
+    end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end-start;
+    cout << "total program time: " << elapsed_seconds.count() << "s\n";
     return 0;
 }
 //L = 524288
-void convolve(double x[], double h[], int L, double y[], int P) {
+void convolve(double x[], double h[], int L, double y[]) {
     cout << "convolving..." << endl;
     four1(x-1, L, 1); //now X
     four1(h-1, L, 1); //now H
@@ -242,7 +239,13 @@ int formatN(int N, int M) {
     }
 }
 
-//All following code courtesy of Leonard Manzara, CPSC 501, F16
+//  All following functions:
+//  four1
+//  writeWaveFileHeader
+//  fwriteIntLSB
+//  fwriteShortLSB
+//  courtesy of Leonard Manzara, CPSC 501, F16
+
 //  The four1 FFT from Numerical Recipes in C,
 //  p. 507 - 508.
 //  Note:  changed float data types to double.
@@ -366,25 +369,6 @@ size_t fwriteIntLSB(int data, FILE *stream)
     array[0] = (unsigned char)(data & 0xFF);
     return fwrite(array, sizeof(unsigned char), 4, stream);
 }
-
-
-
-/******************************************************************************
-*
-*       function:       fwriteShortLSB
-*
-*       purpose:        Writes a 2-byte integer to the file stream, starting
-*                       with the least significant byte (i.e. writes the int
-*                       in little-endian form).  This routine will work on both
-*                       big-endian and little-endian architectures.
-*
-*       internal
-*       functions:      none
-*
-*       library
-*       functions:      fwrite
-*
-******************************************************************************/
 
 size_t fwriteShortLSB(short int data, FILE *stream)
 {
