@@ -13,7 +13,7 @@ using namespace std;
 char* parseCompleteFile(char *currName);
 int extractIntAtIndex(char *currFile, int index);
 double* intToDouble(int16_t* inArray, int size);
-int16_t* doubleToInt (double* inArray, int size);
+int16_t* complexDoubleToInt (double* inArray, int size);
 double * normalDouble (double* inArray, int size);
 void convolve(double x[], double h[], int L, double y[], int P);
 void writeWaveFileHeader(int channels, int numberSamples, double outputRate, FILE *outputFile);
@@ -109,23 +109,27 @@ int main(int argc, char *argv[]) {
     
     x = new double[L*2];
     h = new double[L*2];
+    y = new double[L*2];
 
     for (int i; i < L*2; i++) {
         x[i] = 0.0;
         h[i] = 0.0;
+        y[i] = 0.0;
     }
-
-    memcpy(x, raw_x, N);
-    memcpy(h, raw_h, M);
-     
-    P = N + M - 1;
-    y = new double[L*2];
+    
+    for (int k = 0, i = 0; k < N; k++, i+=2) {
+        memcpy(x + i, raw_x + k, sizeof(double));
+    }
+    for (int k = 0, i = 0; k < M; k++, i+=2) {
+        memcpy(h + i, raw_h + k, sizeof(double));
+    }
     
     convolve(x, h, L, y, P);
     
-    outData = new short[L];
+    y = normalDouble(y,L);
     
-    outData = doubleToInt(y, L);
+    outData = new short[L];
+    outData = complexDoubleToInt(y, L);
     
     FILE *outputFileStream = fopen(outName, "wb");
     if (outputFileStream == NULL) {
@@ -137,42 +141,24 @@ int main(int argc, char *argv[]) {
         fwriteShortLSB(outData[i], outputFileStream);
     }
     
-    //;cout << "P: " << P <<endl;
-    
     fclose(outputFileStream);
     
     return 0;
 }
-
+//L = 524288
 void convolve(double x[], double h[], int L, double y[], int P) {
+    cout << "convolving..." << endl;
     four1(x-1, L, 1); //now X
     four1(h-1, L, 1); //now H
-    for (int k = 0, i =0; k < L; k++, i+=2){    //scale output
-        x[i] /= (double) L;
-        x[i+1] /= (double) L;
-        h[i] /= (double) L;
-        h[i+1] /= (double) L;
-        
-        x[k] = sqrt(x[i] * x[i] + x[i+1] * x[i+1]);     //calc amplitude
-        h[k] = sqrt(h[i] * h[i] + h[i+1] * h[i+1]);
-        }
-                        for (int z; z < L; z++) {
-            cout << x[z] << " ";
-    }
-    
-    for (int k = 1, j = L-1; k < L/2; k++, j--) {           //combine pos/neg amplitudes
-        x[k] = x[k] + x[j];
-        y[k] = y[k] + y[j];
-    }
-    
     complexMulti(x,h,y,L);
     four1(y-1, L, -1);
-    
-
+        for (int i =0; i < L*2; i++) {    //scale output
+            y[i] /= (double) L;
+    }
 }
 
  void complexMulti(double X[], double H[], double Y[], int L) {
-    for (int k = 0, i =0; k < L; k++, i+=2){
+    for (int i =0; i < L*2; i+=2){
         Y[i] = ((X[i] * H[i]) - (X[i+1] * H[i+1]));
         Y[i+1] = ((X[i+1] * H[i]) + (X[i] * H[i+1]));
     }
@@ -213,14 +199,16 @@ double * intToDouble (int16_t* inArray, int size) {
     return outArray;
 }
 
-int16_t* doubleToInt (double* inArray, int size) {
+int16_t* complexDoubleToInt (double* inArray, int size) {
     int16_t *outArray = new int16_t[size];
-    for (int i = 0; i < size; i++) {
-        int16_t j = ceil(inArray[i]*INT16_MAX);
-        outArray[i] = j;
+    for (int k = 0, i =0; k < size; k++, i+=2){
+        int16_t j = inArray[i]*INT16_MAX;
+        outArray[k] = j;
     }
     return outArray;
 }
+
+
 
 double * normalDouble (double* inArray, int size) {
     double maxValue = 0.0;
@@ -236,6 +224,7 @@ double * normalDouble (double* inArray, int size) {
     }
     return outArray;
 }
+
 int formatN(int N, int M) {
     int val, newN;
     if (N > M) {
@@ -245,7 +234,7 @@ int formatN(int N, int M) {
         val = M;
     }
     
-    for (int i = 1; i < 20; i++) {
+    for (int i = 1; i < 100; i++) {
         newN = pow(2, i);
         if (val <= newN) {
             return newN;
