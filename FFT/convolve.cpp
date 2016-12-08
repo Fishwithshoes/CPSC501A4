@@ -6,8 +6,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <chrono>
-#include <ctime>
 using namespace std;
 
 char* parseCompleteFile(char *currName);
@@ -42,8 +40,6 @@ void complexMulti(double X[], double H[], double Y[], int L);
 #define STEREOPHONIC      2
 
 int main(int argc, char *argv[]) {
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    start = std::chrono::system_clock::now();
     
     if (argc != 4) {
         cout << "Please provide the correct arguements in the following order:\n"
@@ -136,10 +132,6 @@ int main(int argc, char *argv[]) {
     }
     
     fclose(outputFileStream);
-    
-    end = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    cout << "total program time: " << elapsed_seconds.count() << "s\n";
     return 0;
 }
 //L = 524288
