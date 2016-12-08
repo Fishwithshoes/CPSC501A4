@@ -18,7 +18,7 @@ void writeWaveFileHeader(int channels, int numberSamples, double outputRate, FIL
 size_t fwriteIntLSB(int data, FILE *stream);
 size_t fwriteShortLSB(short int data, FILE *stream);
 
-int formatN(int N, int M);
+int formatP(int P);
 void four1(double data[], int nn, int isign);
 void complexMulti(double X[], double H[], double Y[], int L);
 
@@ -93,8 +93,8 @@ int main(int argc, char *argv[]) {
     raw_h = new double[M];
     raw_h = intToDouble(IRData, M); //no vals over 1.0, less -1.0
 
-    
-    int L = formatN(N,M);
+    P = N + M - 1;
+    int L = formatP(P);
     cout << "L: " << L << endl;
     
     x = new double[L*2];
@@ -126,8 +126,8 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "File %s cannot be opened for writing\n", outName);
     }
     
-    writeWaveFileHeader(1,L,SAMPLE_RATE, outputFileStream);
-    for (int i = 0; i < L; i++) {
+    writeWaveFileHeader(1,P,SAMPLE_RATE, outputFileStream);
+    for (int i = 0; i < P; i++) {
         fwriteShortLSB(outData[i], outputFileStream);
     }
     
@@ -214,18 +214,11 @@ double * normalDouble (double* inArray, int size) {
     return outArray;
 }
 
-int formatN(int N, int M) {
-    int val, newN;
-    if (N > M) {
-        val = N;
-    }
-    else {
-        val = M;
-    }
-    
+int formatP(int P) {
+    int newN;
     for (int i = 1; i < 100; i++) {
         newN = pow(2, i);
-        if (val <= newN) {
+        if (P <= newN) {
             return newN;
         }
     }
