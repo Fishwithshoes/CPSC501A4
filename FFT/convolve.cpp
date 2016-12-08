@@ -134,15 +134,22 @@ int main(int argc, char *argv[]) {
     fclose(outputFileStream);
     return 0;
 }
-//L = 524288
+
 void convolve(double x[], double h[], int L, double y[]) {
     cout << "convolving..." << endl;
     four1(x-1, L, 1); //now X
     four1(h-1, L, 1); //now H
     complexMulti(x,h,y,L);
     four1(y-1, L, -1);
-        for (int i =0; i < L*2; i++) {    //scale output
+        for (int i =0; i < L*2; i+=8) {    //scale output, unroll for loop by 8
             y[i] /= (double) L;
+            y[i+1] /= (double) L;
+            y[i+2] /= (double) L;
+            y[i+3] /= (double) L;
+            y[i+4] /= (double) L;
+            y[i+5] /= (double) L;
+            y[i+6] /= (double) L;
+            y[i+7] /= (double) L;
     }
 }
 
@@ -233,7 +240,7 @@ int formatP(int P) {
 //  p. 507 - 508.
 //  Note:  changed float data types to double.
 //  nn must be a power of 2, and use +1 for
-//  isign for an FFT, and -1 for the Inverse FFT.
+//  isign for an FFT, and -1 for the Inverse FFT.   
 //  The data is complex, so the array size must be
 //  nn*2. This code assumes the array starts
 //  at index 1, not 0, so subtract 1 when
@@ -248,7 +255,7 @@ void four1(double data[], int nn, int isign) {
 
     for (i = 1; i < n; i += 2) {
         if (j > i) {
-            SWAP(data[j], data[i]);
+            SWAP(data[j], data[i]);     
             SWAP(data[j+1], data[i+1]);
         }
         m = nn;
