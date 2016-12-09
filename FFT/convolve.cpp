@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
     int IRSubChunk1SizeCorrected = IRSubChunk1Size - 16;
     cout << "IR subChunk1SizeCorrected: " << IRSubChunk1SizeCorrected << endl;
     memcpy(&M, IRFileComplete + (40 + IRSubChunk1SizeCorrected), 4);
-        cout << "M: " << M <<endl;
+    cout << "M: " << M <<endl;
     IRData = new int16_t[M];
     memcpy(IRData, IRFileComplete + (44 + IRSubChunk1SizeCorrected), M); //no vals over INT16_MAX, less -INT16_MAX
     raw_h = new double[M];
@@ -214,16 +214,44 @@ int16_t* complexDoubleToInt (double* inArray, int size) {
 }
 
 double * normalDouble (double* inArray, int size) {
-    double maxValue = 0.0;
-    for (int j =0; j < size; j++){
-        if (abs(inArray[j]) > maxValue)
+    double maxValue = 1.0;
+    for (int j =0; j < size; j+=8){
+        if (abs(inArray[j]) > maxValue) {
             maxValue = abs(inArray[j]);
+        }
+        if (abs(inArray[j+1]) > maxValue) {
+            maxValue = abs(inArray[j+1]);
+        }
+        if (abs(inArray[j+2]) > maxValue) {
+            maxValue = abs(inArray[j+2]);
+        }
+        if (abs(inArray[j+3]) > maxValue) {
+            maxValue = abs(inArray[j+3]);
+        }
+        if (abs(inArray[j+4]) > maxValue) {
+            maxValue = abs(inArray[j+4]);
+        }
+        if (abs(inArray[j+5]) > maxValue) {
+            maxValue = abs(inArray[j+5]);
+        }
+        if (abs(inArray[j+6]) > maxValue) {
+            maxValue = abs(inArray[j+6]);
+        }
+        if (abs(inArray[j+7]) > maxValue) {
+            maxValue = abs(inArray[j+7]);
+        }
     }
         
     double *outArray = new double[size];
-    for (int i = 0; i < size; i++) {
-        double f = inArray[i]/maxValue; //currMax;
-        outArray[i] = f;
+    for (int i = 0; i < size; i+=8) {
+        outArray[i] =  inArray[i]/maxValue; //currMax;
+        outArray[i+1] =  inArray[i+1]/maxValue; //currMax;
+        outArray[i+2] =  inArray[i+2]/maxValue; //currMax;
+        outArray[i+3] =  inArray[i+3]/maxValue; //currMax;
+        outArray[i+4] =  inArray[i+4]/maxValue; //currMax;
+        outArray[i+5] =  inArray[i+5]/maxValue; //currMax;
+        outArray[i+6] =  inArray[i+6]/maxValue; //currMax;
+        outArray[i+7] =  inArray[i+7]/maxValue; //currMax;
     }
     return outArray;
 }
