@@ -27,8 +27,6 @@ int main(int argc, char *argv[]) {
     char *f2Complete;
     int16_t *f2Data;
     int M;
-
-    int P;
    
     f1Complete = parseCompleteFile(f1Name);
     int f1ChunkSize = extractIntAtIndex(f1Complete, 4);
@@ -46,18 +44,30 @@ int main(int argc, char *argv[]) {
     f2Data = new int16_t[N];
     memcpy(f2Data, f2Complete + (44 + f2SubChunk1SizeCorrected), M); //no vals over INT16_MAX, less -INT16_MAX
     
+    bool goodComp = true;
+    
+    cout << "comparing raw signal of " << f1Name << " and " << f2Name << endl;
     if (N == M) {
         cout << "data section size equal: " << N << endl;
-        
-        for (int i = 0; i < N; i++) {
-            if(f1Data[i] != f2Data[i]) {
-                cout << "data not equal at sample: " << i << endl;
-                break;
-            }
-        }
     }
     else {
         cout << "data sections not equal with file1: " << N << "    and file2: " << M;
+    }
+    
+    cout << "comparing all samples..." << endl;
+    for (int i = 0; i < N; i++) {
+        if(f1Data[i] != f2Data[i]) {
+            cout << "data not equal at sample: " << i << endl;
+            goodComp = false;
+            break;
+        }
+    }
+    
+    if (goodComp) {
+        cout << "comparison good, signals identical" << endl;
+    }
+    else {
+        cout << "bad comparison, signals differ" << endl;    
     }
 
     return 0;
