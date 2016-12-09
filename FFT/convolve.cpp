@@ -154,9 +154,18 @@ void convolve(double x[], double h[], int L, double y[]) {
 }
 
  void complexMulti(double X[], double H[], double Y[], int L) {
-    for (int i =0; i < L*2; i+=2){
+    for (int i =0; i < L*2; i+=8){
         Y[i] = ((X[i] * H[i]) - (X[i+1] * H[i+1]));
         Y[i+1] = ((X[i+1] * H[i]) + (X[i] * H[i+1]));
+        
+        Y[i+2] = ((X[i+2] * H[i+2]) - (X[i+3] * H[i+3]));
+        Y[i+3] = ((X[i+3] * H[i+2]) + (X[i+2] * H[i+3]));
+        
+        Y[i+4] = ((X[i+4] * H[i+4]) - (X[i+5] * H[i+5]));
+        Y[i+5] = ((X[i+5] * H[i+4]) + (X[i+4] * H[i+5]));
+        
+        Y[i+6] = ((X[i+6] * H[i+6]) - (X[i+7] * H[i+7]));
+        Y[i+7] = ((X[i+7] * H[i+6]) + (X[i+6] * H[i+7]));
     }
 }
 
