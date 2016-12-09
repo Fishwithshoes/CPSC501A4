@@ -3,26 +3,15 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls   s/call   s/call  name    
- 93.98      1.56     1.56        3     0.52     0.52  four1(double*, int, int)
-  2.41      1.60     0.04                             main
-  1.20      1.62     0.02        1     0.02     0.02  complexMulti(double*, double*, double*, int)
-  1.20      1.64     0.02                             __fentry__
-  1.20      1.66     0.02                             _mcount_private
-  0.00      1.66     0.00  1048808     0.00     0.00  std::abs(double)
-  0.00      1.66     0.00   631396     0.00     0.00  fwriteShortLSB(short, __sFILE64*)
-  0.00      1.66     0.00       20     0.00     0.00  __gnu_cxx::__promote_2<int, int, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type>::__type std::pow<int, int>(int, int)
-  0.00      1.66     0.00        5     0.00     0.00  fwriteIntLSB(int, __sFILE64*)
-  0.00      1.66     0.00        4     0.00     0.00  extractIntAtIndex(char*, int)
-  0.00      1.66     0.00        4     0.00     0.00  std::fpos<_mbstate_t>::operator long() const
-  0.00      1.66     0.00        4     0.00     0.00  std::operator|(std::_Ios_Openmode, std::_Ios_Openmode)
-  0.00      1.66     0.00        2     0.00     0.00  intToDouble(short*, int)
-  0.00      1.66     0.00        2     0.00     0.00  parseCompleteFile(char*)
-  0.00      1.66     0.00        2     0.00     0.00  std::fpos<_mbstate_t>::fpos()
-  0.00      1.66     0.00        1     0.00     0.00  normalDouble(double*, int)
-  0.00      1.66     0.00        1     0.00     0.00  complexDoubleToInt(double*, int)
-  0.00      1.66     0.00        1     0.00     0.00  writeWaveFileHeader(int, int, double, __sFILE64*)
-  0.00      1.66     0.00        1     0.00     0.00  formatP(int)
-  0.00      1.66     0.00        1     0.00     1.58  convolve(double*, double*, int, double*)
+ 98.78      1.62     1.62        3     0.54     0.54  four1(double*, int, int)
+  1.22      1.64     0.02        1     0.02     1.64  convolve(double*, double*, int, double*)
+  0.00      1.64     0.00        2     0.00     0.00  intToDouble(short*, int)
+  0.00      1.64     0.00        2     0.00     0.00  parseCompleteFile(char*)
+  0.00      1.64     0.00        1     0.00     0.00  complexMulti(double*, double*, double*, int)
+  0.00      1.64     0.00        1     0.00     0.00  normalDouble(double*, int)
+  0.00      1.64     0.00        1     0.00     0.00  complexDoubleToInt(double*, int)
+  0.00      1.64     0.00        1     0.00     0.00  writeWaveFileHeader(int, int, double, __sFILE64*)
+  0.00      1.64     0.00        1     0.00     0.00  formatP(int)
 
  %         the percentage of the total running time of the
 time       program used by this function.
@@ -60,88 +49,47 @@ notice and this notice are preserved.
 		     Call graph (explanation follows)
 
 
-granularity: each sample hit covers 4 byte(s) for 0.60% of 1.66 seconds
+granularity: each sample hit covers 4 byte(s) for 0.61% of 1.64 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     97.6    0.04    1.58                 main [1]
-                0.00    1.58       1/1           convolve(double*, double*, int, double*) [2]
-                0.00    0.00  631391/631396      fwriteShortLSB(short, __sFILE64*) [69]
-                0.00    0.00       4/4           extractIntAtIndex(char*, int) [72]
-                0.00    0.00       2/2           parseCompleteFile(char*) [76]
-                0.00    0.00       2/2           intToDouble(short*, int) [75]
-                0.00    0.00       1/1           formatP(int) [81]
-                0.00    0.00       1/1           normalDouble(double*, int) [78]
-                0.00    0.00       1/1           complexDoubleToInt(double*, int) [79]
-                0.00    0.00       1/1           writeWaveFileHeader(int, int, double, __sFILE64*) [80]
+[1]    100.0    0.00    1.64                 main [1]
+                0.02    1.62       1/1           convolve(double*, double*, int, double*) [2]
+                0.00    0.00       2/2           parseCompleteFile(char*) [66]
+                0.00    0.00       2/2           intToDouble(short*, int) [65]
+                0.00    0.00       1/1           formatP(int) [71]
+                0.00    0.00       1/1           normalDouble(double*, int) [68]
+                0.00    0.00       1/1           complexDoubleToInt(double*, int) [69]
+                0.00    0.00       1/1           writeWaveFileHeader(int, int, double, __sFILE64*) [70]
 -----------------------------------------------
-                0.00    1.58       1/1           main [1]
-[2]     95.2    0.00    1.58       1         convolve(double*, double*, int, double*) [2]
-                1.56    0.00       3/3           four1(double*, int, int) [3]
-                0.02    0.00       1/1           complexMulti(double*, double*, double*, int) [4]
+                0.02    1.62       1/1           main [1]
+[2]    100.0    0.02    1.62       1         convolve(double*, double*, int, double*) [2]
+                1.62    0.00       3/3           four1(double*, int, int) [3]
+                0.00    0.00       1/1           complexMulti(double*, double*, double*, int) [67]
 -----------------------------------------------
-                1.56    0.00       3/3           convolve(double*, double*, int, double*) [2]
-[3]     94.0    1.56    0.00       3         four1(double*, int, int) [3]
------------------------------------------------
-                0.02    0.00       1/1           convolve(double*, double*, int, double*) [2]
-[4]      1.2    0.02    0.00       1         complexMulti(double*, double*, double*, int) [4]
------------------------------------------------
-                                                 <spontaneous>
-[5]      1.2    0.02    0.00                 __fentry__ [5]
------------------------------------------------
-                                                 <spontaneous>
-[6]      1.2    0.02    0.00                 _mcount_private [6]
------------------------------------------------
-                0.00    0.00 1048808/1048808     normalDouble(double*, int) [78]
-[68]     0.0    0.00    0.00 1048808         std::abs(double) [68]
------------------------------------------------
-                0.00    0.00       1/631396      _GLOBAL__sub_I_main [82]
-                0.00    0.00       4/631396      writeWaveFileHeader(int, int, double, __sFILE64*) [80]
-                0.00    0.00  631391/631396      main [1]
-[69]     0.0    0.00    0.00  631396         fwriteShortLSB(short, __sFILE64*) [69]
------------------------------------------------
-                0.00    0.00      20/20          formatP(int) [81]
-[70]     0.0    0.00    0.00      20         __gnu_cxx::__promote_2<int, int, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type>::__type std::pow<int, int>(int, int) [70]
------------------------------------------------
-                0.00    0.00       5/5           writeWaveFileHeader(int, int, double, __sFILE64*) [80]
-[71]     0.0    0.00    0.00       5         fwriteIntLSB(int, __sFILE64*) [71]
------------------------------------------------
-                0.00    0.00       4/4           main [1]
-[72]     0.0    0.00    0.00       4         extractIntAtIndex(char*, int) [72]
------------------------------------------------
-                0.00    0.00       4/4           parseCompleteFile(char*) [76]
-[73]     0.0    0.00    0.00       4         std::fpos<_mbstate_t>::operator long() const [73]
------------------------------------------------
-                0.00    0.00       4/4           parseCompleteFile(char*) [76]
-[74]     0.0    0.00    0.00       4         std::operator|(std::_Ios_Openmode, std::_Ios_Openmode) [74]
+                1.62    0.00       3/3           convolve(double*, double*, int, double*) [2]
+[3]     98.8    1.62    0.00       3         four1(double*, int, int) [3]
 -----------------------------------------------
                 0.00    0.00       2/2           main [1]
-[75]     0.0    0.00    0.00       2         intToDouble(short*, int) [75]
+[65]     0.0    0.00    0.00       2         intToDouble(short*, int) [65]
 -----------------------------------------------
                 0.00    0.00       2/2           main [1]
-[76]     0.0    0.00    0.00       2         parseCompleteFile(char*) [76]
-                0.00    0.00       4/4           std::operator|(std::_Ios_Openmode, std::_Ios_Openmode) [74]
-                0.00    0.00       4/4           std::fpos<_mbstate_t>::operator long() const [73]
-                0.00    0.00       2/2           std::fpos<_mbstate_t>::fpos() [77]
+[66]     0.0    0.00    0.00       2         parseCompleteFile(char*) [66]
 -----------------------------------------------
-                0.00    0.00       2/2           parseCompleteFile(char*) [76]
-[77]     0.0    0.00    0.00       2         std::fpos<_mbstate_t>::fpos() [77]
+                0.00    0.00       1/1           convolve(double*, double*, int, double*) [2]
+[67]     0.0    0.00    0.00       1         complexMulti(double*, double*, double*, int) [67]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[78]     0.0    0.00    0.00       1         normalDouble(double*, int) [78]
-                0.00    0.00 1048808/1048808     std::abs(double) [68]
+[68]     0.0    0.00    0.00       1         normalDouble(double*, int) [68]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[79]     0.0    0.00    0.00       1         complexDoubleToInt(double*, int) [79]
+[69]     0.0    0.00    0.00       1         complexDoubleToInt(double*, int) [69]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[80]     0.0    0.00    0.00       1         writeWaveFileHeader(int, int, double, __sFILE64*) [80]
-                0.00    0.00       5/5           fwriteIntLSB(int, __sFILE64*) [71]
-                0.00    0.00       4/631396      fwriteShortLSB(short, __sFILE64*) [69]
+[70]     0.0    0.00    0.00       1         writeWaveFileHeader(int, int, double, __sFILE64*) [70]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[81]     0.0    0.00    0.00       1         formatP(int) [81]
-                0.00    0.00      20/20          __gnu_cxx::__promote_2<int, int, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type>::__type std::pow<int, int>(int, int) [70]
+[71]     0.0    0.00    0.00       1         formatP(int) [71]
 -----------------------------------------------
 
  This table describes the call tree of the program, and was sorted by
@@ -234,10 +182,6 @@ notice and this notice are preserved.
 
 Index by function name
 
-  [75] intToDouble(short*, int) [79] complexDoubleToInt(double*, int) [68] std::abs(double)
-   [4] complexMulti(double*, double*, double*, int) [80] writeWaveFileHeader(int, int, double, __sFILE64*) [70] __gnu_cxx::__promote_2<int, int, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type, __gnu_cxx::__promote<int, std::__is_integer<int>::__value>::__type>::__type std::pow<int, int>(int, int)
-  [71] fwriteIntLSB(int, __sFILE64*) [3] four1(double*, int, int) [74] std::operator|(std::_Ios_Openmode, std::_Ios_Openmode)
-  [78] normalDouble(double*, int) [81] formatP(int)        [5] __fentry__
-  [69] fwriteShortLSB(short, __sFILE64*) [2] convolve(double*, double*, int, double*) [6] _mcount_private
-  [72] extractIntAtIndex(char*, int) [73] std::fpos<_mbstate_t>::operator long() const [1] main
-  [76] parseCompleteFile(char*) [77] std::fpos<_mbstate_t>::fpos()
+  [65] intToDouble(short*, int) [66] parseCompleteFile(char*) [3] four1(double*, int, int)
+  [67] complexMulti(double*, double*, double*, int) [69] complexDoubleToInt(double*, int) [71] formatP(int)
+  [68] normalDouble(double*, int) [70] writeWaveFileHeader(int, int, double, __sFILE64*) [2] convolve(double*, double*, int, double*)
